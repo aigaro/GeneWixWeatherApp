@@ -12,6 +12,7 @@ import SWXMLHash
 
 var weather = WeatherData()
 var date = 0
+var weatherPlace = 0
 
 class ViewController: UIViewController {
     
@@ -22,6 +23,8 @@ class ViewController: UIViewController {
         windRange.isHidden = false
     }
    
+    
+    //Add guard statement. func() needed? What type of variable is XMLIndexer?
     let xmlTwo = Alamofire.request("https://www.ilmateenistus.ee/ilma_andmed/xml/forecast.php").responseString().data
     
     @IBOutlet weak var dayTemp: UILabel!
@@ -35,6 +38,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var date2Button: UIButton!
     @IBOutlet weak var date3Button: UIButton!
     @IBOutlet weak var date4Button: UIButton!
+    @IBOutlet weak var place: UILabel!
+    @IBOutlet weak var phenomenon: UILabel!
+    @IBOutlet weak var temperature: UILabel!
     
     @IBAction func buttonPress(_ sender: UIButton) {
         
@@ -42,7 +48,6 @@ class ViewController: UIViewController {
         case 0:
             date = 0
             reset_bg_color()
-            //button?.layer.borderColor = UIColor.lightGray.cgColor
             date1Button.layer.backgroundColor = UIColor.lightGray.cgColor
             windRange.isHidden = false
         case 1:
@@ -75,7 +80,7 @@ class ViewController: UIViewController {
     func weatherData() {
         
             let parsedData =  SWXMLHash.parse(self.xmlTwo!)
-            guard abs(weather.tempMinDay) < 41 && abs(weather.tempMaxDay) < 41 && abs(weather.tempMinNight) < 41 && abs(weather.tempMaxNight) < 41 else {return}
+            guard abs(weather.tempMinDay) < 51 && abs(weather.tempMaxDay) < 51 && abs(weather.tempMinNight) < 51 && abs(weather.tempMaxNight) < 51 else {return}
             
             weather.tempMinDay = Int(parsedData["forecasts"]["forecast"][date]["day"]["tempmin"].element!.text!)!
             weather.tempMaxDay = Int(parsedData["forecasts"]["forecast"][date]["day"]["tempmax"].element!.text!)!
@@ -84,6 +89,16 @@ class ViewController: UIViewController {
             weather.tempMinNight = Int(parsedData["forecasts"]["forecast"][date]["night"]["tempmin"].element!.text!)!
             weather.tempMaxNight = Int(parsedData["forecasts"]["forecast"][date]["night"]["tempmax"].element!.text!)!
             weather.weatherTextNight = parsedData["forecasts"]["forecast"][date]["night"]["text"].element!.text!
+        
+            weather.weatherPlacePhenomenonDay = parsedData["forecasts"]["forecast"][date]["day"]["place"][weatherPlace]["phenomenon"].element!.text!
+            weather.weatherPlacePhenomenonNight = parsedData["forecasts"]["forecast"][date]["night"]["place"][weatherPlace]["phenomenon"].element!.text!
+            weather.weatherPlaceTemperatureNight = Int(parsedData["forecasts"]["forecast"][date]["night"]["place"][weatherPlace]["tempmin"].element!.text!)!
+            weather.weatherPlaceTemperatureDay = Int(parsedData["forecasts"]["forecast"][date]["day"]["place"][weatherPlace]["tempmax"].element!.text!)!
+
+        
+            self.place.text = weather.weatherPlaces[0]
+            self.temperature.text = "\(weather.weatherPlaceTemperatureNight) kuni \(weather.weatherPlaceTemperatureDay) "
+            self.phenomenon.text = "Päeval on \(weather.weatherDictionary[weather.weatherPlacePhenomenonDay]!) \n Öösel on \(weather.weatherDictionary[weather.weatherPlacePhenomenonNight]!)"
         
             for button in [date1Button, date2Button, date3Button, date4Button] {
                 button?.layer.borderWidth = 1
@@ -122,18 +137,18 @@ class ViewController: UIViewController {
             
             switch Int(weather.tempMaxDay) {
             case -100 ... -1:
-                self.dayText.text = "Päeval on külma miinus \(weather.weatherDict[weather.tempMinDay*(-1)]) kuni \(weather.weatherDict[weather.tempMaxDay*(-1)]) kraadi"
+                self.dayText.text = "Päeval on külma miinus \(weather.temperatureArray[weather.tempMinDay*(-1)]) kuni \(weather.temperatureArray[weather.tempMaxDay*(-1)]) kraadi"
                 self.dayTemp.text = "Päeval külma \(weather.tempMinDay) kuni \(weather.tempMaxDay) °C"
             case 0:
-                self.dayText.text = "Päeval on külma miinus \(weather.weatherDict[weather.tempMinDay*(-1)]) kuni \(weather.weatherDict[weather.tempMaxDay]) kraadi"
+                self.dayText.text = "Päeval on külma miinus \(weather.temperatureArray[weather.tempMinDay*(-1)]) kuni \(weather.temperatureArray[weather.tempMaxDay]) kraadi"
                 self.dayTemp.text = "Päeval on külma \(weather.tempMinDay) kuni \(weather.tempMaxDay) °C"
             case 1...100:
                 switch Int(weather.tempMinDay) {
                 case -100..<0:
-                    self.dayText.text = "Päeval on külma miinus \(weather.weatherDict[abs(weather.tempMinDay)]) kuni pluss \(weather.weatherDict[weather.tempMaxDay]) kraadi"
+                    self.dayText.text = "Päeval on külma miinus \(weather.temperatureArray[abs(weather.tempMinDay)]) kuni pluss \(weather.temperatureArray[weather.tempMaxDay]) kraadi"
                     self.dayTemp.text = "Päeval on külma \(weather.tempMinDay) kuni \(weather.tempMaxDay) °C"
                 case 0...100:
-                    self.dayText.text = "Päeval on sooja \(weather.weatherDict[abs(weather.tempMinDay)]) kuni \(weather.weatherDict[weather.tempMaxDay]) kraadi"
+                    self.dayText.text = "Päeval on sooja \(weather.temperatureArray[abs(weather.tempMinDay)]) kuni \(weather.temperatureArray[weather.tempMaxDay]) kraadi"
                     self.dayTemp.text = "Päeval on sooja \(weather.tempMinDay) kuni \(weather.tempMaxDay) °C"
                 default:
                     return
@@ -144,18 +159,18 @@ class ViewController: UIViewController {
             
             switch Int(weather.tempMaxNight) {
             case -100 ... -1:
-                self.nightText.text = "Öösel on külma miinus \(weather.weatherDict[weather.tempMinNight*(-1)]) kuni \(weather.weatherDict[weather.tempMaxNight*(-1)]) kraadi"
+                self.nightText.text = "Öösel on külma miinus \(weather.temperatureArray[weather.tempMinNight*(-1)]) kuni \(weather.temperatureArray[weather.tempMaxNight*(-1)]) kraadi"
                 self.nightTemp.text = "Öösel on külma \(weather.tempMinNight) kuni \(weather.tempMaxNight) °C"
             case 0:
-                self.nightText.text = "Öösel on külma miinus \(weather.weatherDict[weather.tempMinNight*(-1)]) kuni \(weather.weatherDict[weather.tempMaxNight]) kraadi"
+                self.nightText.text = "Öösel on külma miinus \(weather.temperatureArray[weather.tempMinNight*(-1)]) kuni \(weather.temperatureArray[weather.tempMaxNight]) kraadi"
                 self.nightTemp.text = "Öösel on külma \(weather.tempMinNight) kuni \(weather.tempMaxNight) °C"
             case 1...100:
                 switch Int(weather.tempMinNight) {
                 case -100..<0:
-                    self.nightText.text = "Öösel on külma miinus \(weather.weatherDict[abs(weather.tempMinNight)]) kuni pluss \(weather.weatherDict[weather.tempMaxNight]) kraadi"
+                    self.nightText.text = "Öösel on külma miinus \(weather.temperatureArray[abs(weather.tempMinNight)]) kuni pluss \(weather.temperatureArray[weather.tempMaxNight]) kraadi"
                     self.nightTemp.text = "Öösel on külma \(weather.tempMinNight) kuni \(weather.tempMaxNight) °C"
                 case 0...100:
-                    self.nightText.text = "Öösel on sooja \(weather.weatherDict[weather.tempMinNight]) kuni \(weather.weatherDict[weather.tempMaxNight]) kraadi"
+                    self.nightText.text = "Öösel on sooja \(weather.temperatureArray[weather.tempMinNight]) kuni \(weather.temperatureArray[weather.tempMaxNight]) kraadi"
                     self.nightTemp.text = "Öösel on sooja \(weather.tempMinNight) kuni \(weather.tempMaxNight) °C"
                 default:
                     return

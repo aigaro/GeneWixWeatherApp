@@ -116,6 +116,27 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Phenomenon" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c7K-SR-cVQ">
+                                <rect key="frame" x="112" y="0.0" width="259" height="83"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Temperature" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HSA-MO-81e">
+                                <rect key="frame" x="0.0" y="43" width="110" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Place" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dcs-J6-UDE">
+                                <rect key="frame" x="0.0" y="6" width="110" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -178,6 +199,9 @@
                         <outlet property="descriptionNight" destination="yMP-CZ-ILF" id="cJF-Pg-jMn"/>
                         <outlet property="nightTemp" destination="Y7c-CP-X1c" id="vPi-w9-7eg"/>
                         <outlet property="nightText" destination="7Mk-0t-hTl" id="TM0-f1-glA"/>
+                        <outlet property="phenomenon" destination="c7K-SR-cVQ" id="egF-gt-qaD"/>
+                        <outlet property="place" destination="dcs-J6-UDE" id="Lle-bh-k3O"/>
+                        <outlet property="temperature" destination="HSA-MO-81e" id="71F-bF-6Hs"/>
                         <outlet property="windRange" destination="rSu-pN-6ve" id="fj1-iu-dWC"/>
                     </connections>
                 </viewController>
