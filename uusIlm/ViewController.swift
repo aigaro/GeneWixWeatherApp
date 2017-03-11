@@ -13,18 +13,44 @@ import SWXMLHash
 var weather = WeatherData()
 var date = 0
 var weatherPlace = 0
+var weatherInt = 0
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     
     override func viewDidLoad() {
         super.viewDidLoad()
         weatherData()
         date1Button.layer.backgroundColor = UIColor.lightGray.cgColor
         windRange.isHidden = false
+        placePicker.delegate = self
+        placePicker.dataSource = self
     }
-   
+    
+    //pickerView
+    
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return weather.weatherPlaces.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return weather.weatherPlaces[row]
+        
+        
+    }
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        weatherInt = row
+       print(weatherInt)
+        weatherPlace = row
+        weatherData()
+    }
+    
     
     //Add guard statement. func() needed? What type of variable is XMLIndexer?
+//    guard if let Alamofire.request("https://www.ilmateenistus.ee/ilma_andmed/xml/forecast.php").responseString().data else {return}
     let xmlTwo = Alamofire.request("https://www.ilmateenistus.ee/ilma_andmed/xml/forecast.php").responseString().data
     
     @IBOutlet weak var dayTemp: UILabel!
@@ -38,9 +64,10 @@ class ViewController: UIViewController {
     @IBOutlet weak var date2Button: UIButton!
     @IBOutlet weak var date3Button: UIButton!
     @IBOutlet weak var date4Button: UIButton!
-    @IBOutlet weak var place: UILabel!
+    @IBOutlet weak var placePicker: UIPickerView!
     @IBOutlet weak var phenomenon: UILabel!
     @IBOutlet weak var temperature: UILabel!
+    @IBOutlet weak var weatherImage: UIImageView!
     
     @IBAction func buttonPress(_ sender: UIButton) {
         
@@ -79,36 +106,39 @@ class ViewController: UIViewController {
     
     func weatherData() {
         
-            let parsedData =  SWXMLHash.parse(self.xmlTwo!)
-            guard abs(weather.tempMinDay) < 51 && abs(weather.tempMaxDay) < 51 && abs(weather.tempMinNight) < 51 && abs(weather.tempMaxNight) < 51 else {return}
+        let parsedData =  SWXMLHash.parse(self.xmlTwo!)
+        guard abs(weather.tempMinDay) < 51 && abs(weather.tempMaxDay) < 51 && abs(weather.tempMinNight) < 51 && abs(weather.tempMaxNight) < 51 else {return}
+        
+        weather.tempMinDay = Int(parsedData["forecasts"]["forecast"][date]["day"]["tempmin"].element!.text!)!
+        weather.tempMaxDay = Int(parsedData["forecasts"]["forecast"][date]["day"]["tempmax"].element!.text!)!
+        weather.weatherTextDay = parsedData["forecasts"]["forecast"][date]["day"]["text"].element!.text!
+        
+        weather.tempMinNight = Int(parsedData["forecasts"]["forecast"][date]["night"]["tempmin"].element!.text!)!
+        weather.tempMaxNight = Int(parsedData["forecasts"]["forecast"][date]["night"]["tempmax"].element!.text!)!
+        weather.weatherTextNight = parsedData["forecasts"]["forecast"][date]["night"]["text"].element!.text!
+        
+        guard weatherPlace < 6 else {return} // last three don't have temp, app crashes
+        
+        weather.weatherPlacePhenomenonDay = parsedData["forecasts"]["forecast"][date]["day"]["place"][weatherPlace]["phenomenon"].element!.text!
+        weather.weatherPlacePhenomenonNight = parsedData["forecasts"]["forecast"][date]["night"]["place"][weatherPlace]["phenomenon"].element!.text!
+        weather.weatherPlaceTemperatureNight = Int(parsedData["forecasts"]["forecast"][date]["night"]["place"][weatherPlace]["tempmin"].element!.text!)!
+        weather.weatherPlaceTemperatureDay = Int(parsedData["forecasts"]["forecast"][date]["day"]["place"][weatherPlace]["tempmax"].element!.text!)!
             
-            weather.tempMinDay = Int(parsedData["forecasts"]["forecast"][date]["day"]["tempmin"].element!.text!)!
-            weather.tempMaxDay = Int(parsedData["forecasts"]["forecast"][date]["day"]["tempmax"].element!.text!)!
-            weather.weatherTextDay = parsedData["forecasts"]["forecast"][date]["day"]["text"].element!.text!
+        
+        
+        self.temperature.text = "\(weather.weatherPlaceTemperatureNight) kuni \(weather.weatherPlaceTemperatureDay) "
+        self.phenomenon.text = "Päeval on \(weather.weatherDictionary[weather.weatherPlacePhenomenonDay]!) \n Öösel on \(weather.weatherDictionary[weather.weatherPlacePhenomenonNight]!)"
+        weatherImage.image = UIImage(named: weather.weatherPlacePhenomenonDay)
+        
+        for button in [date1Button, date2Button, date3Button, date4Button] {
+            button?.layer.borderWidth = 1
+            button?.layer.borderColor = UIColor.lightGray.cgColor
+        }
+        
+        for layer in [dayTemp, nightTemp, dayText, nightText, descriptionDay, descriptionNight, windRange] {
+            layer?.layer.borderWidth = 1
             
-            weather.tempMinNight = Int(parsedData["forecasts"]["forecast"][date]["night"]["tempmin"].element!.text!)!
-            weather.tempMaxNight = Int(parsedData["forecasts"]["forecast"][date]["night"]["tempmax"].element!.text!)!
-            weather.weatherTextNight = parsedData["forecasts"]["forecast"][date]["night"]["text"].element!.text!
-        
-            weather.weatherPlacePhenomenonDay = parsedData["forecasts"]["forecast"][date]["day"]["place"][weatherPlace]["phenomenon"].element!.text!
-            weather.weatherPlacePhenomenonNight = parsedData["forecasts"]["forecast"][date]["night"]["place"][weatherPlace]["phenomenon"].element!.text!
-            weather.weatherPlaceTemperatureNight = Int(parsedData["forecasts"]["forecast"][date]["night"]["place"][weatherPlace]["tempmin"].element!.text!)!
-            weather.weatherPlaceTemperatureDay = Int(parsedData["forecasts"]["forecast"][date]["day"]["place"][weatherPlace]["tempmax"].element!.text!)!
-
-        
-            self.place.text = weather.weatherPlaces[0]
-            self.temperature.text = "\(weather.weatherPlaceTemperatureNight) kuni \(weather.weatherPlaceTemperatureDay) "
-            self.phenomenon.text = "Päeval on \(weather.weatherDictionary[weather.weatherPlacePhenomenonDay]!) \n Öösel on \(weather.weatherDictionary[weather.weatherPlacePhenomenonNight]!)"
-        
-            for button in [date1Button, date2Button, date3Button, date4Button] {
-                button?.layer.borderWidth = 1
-                button?.layer.borderColor = UIColor.lightGray.cgColor
-            }
             
-            for layer in [dayTemp, nightTemp, dayText, nightText, descriptionDay, descriptionNight, windRange] {
-                layer?.layer.borderWidth = 1
-
-        
             for i in 0...3 {
                 weather.chosenDate.append(parsedData["forecasts"]["forecast"][i].element!.attribute(by: "date")!.text)
             }
@@ -182,8 +212,8 @@ class ViewController: UIViewController {
             self.descriptionDay.text = "Päev. \(weather.weatherTextDay)"
             self.descriptionNight.text = "Öö. \(weather.weatherTextNight)"
         }
-    
-    
+        
+        
         
         
     }

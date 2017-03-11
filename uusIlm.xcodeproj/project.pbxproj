@@ -8,21 +8,21 @@
 
 /* Begin PBXBuildFile section */
 		0820BD9A1E5E2A4700A7E4A4 /* XML.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0820BD991E5E2A4700A7E4A4 /* XML.swift */; };
+		088B8DE81E7482BF0000763A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 088B8DE71E7482BF0000763A /* Assets.xcassets */; };
 		08EF810B1E5E23920090547C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EF810A1E5E23920090547C /* AppDelegate.swift */; };
 		08EF810D1E5E23920090547C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EF810C1E5E23920090547C /* ViewController.swift */; };
 		08EF81101E5E23920090547C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 08EF810E1E5E23920090547C /* Main.storyboard */; };
-		08EF81121E5E23920090547C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 08EF81111E5E23920090547C /* Assets.xcassets */; };
 		08EF81151E5E23920090547C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 08EF81131E5E23920090547C /* LaunchScreen.storyboard */; };
 		228C187367A719C050625D11 /* Pods_uusIlm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 609452910B48FE33FCED6B53 /* Pods_uusIlm.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		0820BD991E5E2A4700A7E4A4 /* XML.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XML.swift; sourceTree = "<group>"; };
+		088B8DE71E7482BF0000763A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		08EF81071E5E23920090547C /* uusIlm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = uusIlm.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		08EF810A1E5E23920090547C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		08EF810C1E5E23920090547C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		08EF810F1E5E23920090547C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		08EF81111E5E23920090547C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		08EF81141E5E23920090547C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		08EF81161E5E23920090547C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		609452910B48FE33FCED6B53 /* Pods_uusIlm.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_uusIlm.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -67,7 +67,7 @@
 				08EF810C1E5E23920090547C /* ViewController.swift */,
 				0820BD991E5E2A4700A7E4A4 /* XML.swift */,
 				08EF810E1E5E23920090547C /* Main.storyboard */,
-				08EF81111E5E23920090547C /* Assets.xcassets */,
+				088B8DE71E7482BF0000763A /* Assets.xcassets */,
 				08EF81131E5E23920090547C /* LaunchScreen.storyboard */,
 				08EF81161E5E23920090547C /* Info.plist */,
 			);
@@ -155,7 +155,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				08EF81151E5E23920090547C /* LaunchScreen.storyboard in Resources */,
-				08EF81121E5E23920090547C /* Assets.xcassets in Resources */,
+				088B8DE81E7482BF0000763A /* Assets.xcassets in Resources */,
 				08EF81101E5E23920090547C /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

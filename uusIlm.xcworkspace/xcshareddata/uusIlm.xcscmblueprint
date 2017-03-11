@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "792343005A4C748B3BD6DE61E300663AB0FC669A",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "792343005A4C748B3BD6DE61E300663AB0FC669A" : 9223372036854775807,
+    "FEFE00E4C6059082675328FABA7D5F845EF72FD7" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "C1B47E13-939A-4891-AF46-35A823348327",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "792343005A4C748B3BD6DE61E300663AB0FC669A" : "uusIlm2parse_sync\/",
+    "FEFE00E4C6059082675328FABA7D5F845EF72FD7" : "uusIlm2parse_sync\/Pods\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "uusIlm",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "uusIlm.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/aigaro\/uusIlm3",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "792343005A4C748B3BD6DE61E300663AB0FC669A"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/aigaro\/uusIlm2",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "FEFE00E4C6059082675328FABA7D5F845EF72FD7"
+    }
+  ]
+}
