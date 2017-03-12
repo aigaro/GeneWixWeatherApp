@@ -13,8 +13,8 @@ import SWXMLHash
 var weather = WeatherData()
 var date = 0
 var weatherPlace = 0
-var weatherPlaceDefault = 3
-var weatherInt = 0
+var weatherPlaceDefault = Int()
+//var weatherInt = 0
 
 class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     
@@ -26,21 +26,11 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         placePicker.delegate = self
         placePicker.dataSource = self
         
-        let defaults = UserDefaults.standard
-        
-        
-        
-        
-        
-        
-        if defaults.bool(forKey: "hasLaunched") {
-            //has launched
-            weatherPlace = weatherPlaceDefault
-        } else {
-            defaults.set(true, forKey: "hasLaunced")
-            defaults.synchronize()
-            weatherPlace = 0
-
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        if let defaultPlace = UserDefaults.standard.integer(forKey: "defaultPlace") as? Int {
+            self.placePicker.selectRow(defaultPlace, inComponent: 0, animated: true)
         }
     }
     
@@ -61,9 +51,10 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         
     }
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        weatherInt = row
-       print(weatherInt)
+
         weatherPlace = row
+        weatherPlaceDefault = row
+        UserDefaults.standard.set(row, forKey: "defaultPlace")
         weatherData()
     }
     
@@ -93,37 +84,44 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         switch sender.tag {
         case 0:
             date = 0
-            reset_bg_color()
+            resetBGColor()
             date1Button.layer.backgroundColor = UIColor.lightGray.cgColor
             windRange.isHidden = false
         case 1:
             date = 1
-            reset_bg_color()
+            resetBGColor()
             date2Button.layer.backgroundColor = UIColor.lightGray.cgColor
             windRange.isHidden = true
         case 2:
             date = 2
-            reset_bg_color()
+            resetBGColor()
             date3Button.layer.backgroundColor = UIColor.lightGray.cgColor
             windRange.isHidden = true
         case 3:
             date = 3
-            reset_bg_color()
+            resetBGColor()
             date4Button.layer.backgroundColor = UIColor.lightGray.cgColor
             windRange.isHidden = true
         default:
             return
         }
+        let parsedData =  SWXMLHash.parse(self.xmlTwo!)
+        print(Int(parsedData["forecasts"]["forecast"][date]["day"]["tempmin"].element!.text!)!)
         weatherData()
+        
     }
     
-    func reset_bg_color() {
+    func resetBGColor() {
         for button_bg in [date1Button, date2Button, date3Button, date4Button] {
             button_bg?.layer.backgroundColor = nil
         }
     }
     
     func weatherData() {
+        
+        if let weatherPlaceDefault = UserDefaults.standard.integer(forKey: "defaultPlace") as? Int {
+            weatherPlace = weatherPlaceDefault
+        }
         
         let parsedData =  SWXMLHash.parse(self.xmlTwo!)
         guard abs(weather.tempMinDay) < 51 && abs(weather.tempMaxDay) < 51 && abs(weather.tempMinNight) < 51 && abs(weather.tempMaxNight) < 51 else {return}
@@ -138,10 +136,10 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         
         guard weatherPlace < 6 else {return} // last three don't have temp, app crashes
         
-        weather.weatherPlacePhenomenonDay = parsedData["forecasts"]["forecast"][date]["day"]["place"][weatherPlace]["phenomenon"].element!.text!
-        weather.weatherPlacePhenomenonNight = parsedData["forecasts"]["forecast"][date]["night"]["place"][weatherPlace]["phenomenon"].element!.text!
-        weather.weatherPlaceTemperatureNight = Int(parsedData["forecasts"]["forecast"][date]["night"]["place"][weatherPlace]["tempmin"].element!.text!)!
-        weather.weatherPlaceTemperatureDay = Int(parsedData["forecasts"]["forecast"][date]["day"]["place"][weatherPlace]["tempmax"].element!.text!)!
+        weather.weatherPlacePhenomenonDay = parsedData["forecasts"]["forecast"][0]["day"]["place"][weatherPlace]["phenomenon"].element!.text!
+        weather.weatherPlacePhenomenonNight = parsedData["forecasts"]["forecast"][0]["night"]["place"][weatherPlace]["phenomenon"].element!.text!
+        weather.weatherPlaceTemperatureNight = Int(parsedData["forecasts"]["forecast"][0]["night"]["place"][weatherPlace]["tempmin"].element!.text!)!
+        weather.weatherPlaceTemperatureDay = Int(parsedData["forecasts"]["forecast"][0]["day"]["place"][weatherPlace]["tempmax"].element!.text!)!
             
         
         
