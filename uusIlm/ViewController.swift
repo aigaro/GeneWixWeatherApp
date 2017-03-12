@@ -15,54 +15,8 @@ var date = 0
 var weatherPlace = 0
 var weatherPlaceDefault = Int()
 
-
 class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        weatherData()
-        date1Button.layer.backgroundColor = UIColor.lightGray.cgColor
-        windRange.isHidden = false
-        placePicker.delegate = self
-        placePicker.dataSource = self
-        
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        if let defaultPlace = UserDefaults.standard.integer(forKey: "defaultPlace") as? Int {
-            self.placePicker.selectRow(defaultPlace, inComponent: 0, animated: true)
-        }
-    }
-    
-    
-    //pickerView
-    
-    
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return weather.weatherPlaces.count
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return weather.weatherPlaces[row]
-        
-        
-    }
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        
-        weatherPlace = row
-        weatherPlaceDefault = row
-        UserDefaults.standard.set(row, forKey: "defaultPlace")
-        weatherData()
-    }
-    
-    
-    //Add guard statement. Why does it not work?
-    //    guard let xmlTwo = Alamofire.request("https://www.ilmateenistus.ee/ilma_andmed/xml/forecast.php").responseString().data else {
-    //    return
-    //    }
     let xmlTwo = Alamofire.request("https://www.ilmateenistus.ee/ilma_andmed/xml/forecast.php").responseString().data
     
     @IBOutlet weak var dayTemp: UILabel!
@@ -81,36 +35,96 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
     @IBOutlet weak var temperature: UILabel!
     @IBOutlet weak var weatherImage: UIImageView!
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        weatherData()
+        date1Button.layer.backgroundColor = UIColor.lightGray.cgColor
+        windRange.isHidden = false
+        placePicker.delegate = self
+        placePicker.dataSource = self
+        placePicker.isHidden = false
+        phenomenon.isHidden = false
+        temperature.isHidden = false
+        weatherImage.isHidden = false
+    }
+    
+    //    override func viewDidAppear(_ animated: Bool) {
+    //        if let defaultPlace = UserDefaults.standard.integer(forKey: "defaultPlace") as? Int {
+    //            self.placePicker.selectRow(defaultPlace, inComponent: 0, animated: true)
+    //        }
+    //    }
+    
+    
+    //pickerView
+    
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return weather.weatherPlaces.count
+    }
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return weather.weatherPlaces[row]
+    }
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        weatherPlace = row
+        weatherPlaceDefault = row
+        UserDefaults.standard.set(row, forKey: "defaultPlace")
+        weatherData()
+    }
+    
+    //Add guard statement. Why does it not work?
+    //    guard let xmlTwo = Alamofire.request("https://www.ilmateenistus.ee/ilma_andmed/xml/forecast.php").responseString().data else {
+    //    return
+    //    }
+    
     @IBAction func buttonPress(_ sender: UIButton) {
-        
         switch sender.tag {
         case 0:
             date = 0
             resetBGColor()
             date1Button.layer.backgroundColor = UIColor.lightGray.cgColor
             windRange.isHidden = false
+            placePicker.isHidden = false
+            phenomenon.isHidden = false
+            temperature.isHidden = false
+            weatherImage.isHidden = false
+
         case 1:
             date = 1
             resetBGColor()
             date2Button.layer.backgroundColor = UIColor.lightGray.cgColor
             windRange.isHidden = true
+            placePicker.isHidden = true
+            phenomenon.isHidden = true
+            temperature.isHidden = true
+            weatherImage.isHidden = true
+
         case 2:
             date = 2
             resetBGColor()
             date3Button.layer.backgroundColor = UIColor.lightGray.cgColor
             windRange.isHidden = true
+            placePicker.isHidden = true
+            phenomenon.isHidden = true
+            temperature.isHidden = true
+            weatherImage.isHidden = true
+            
         case 3:
             date = 3
             resetBGColor()
             date4Button.layer.backgroundColor = UIColor.lightGray.cgColor
             windRange.isHidden = true
+            placePicker.isHidden = true
+            phenomenon.isHidden = true
+            temperature.isHidden = true
+            weatherImage.isHidden = true
+            
         default:
             return
         }
-        let parsedData =  SWXMLHash.parse(self.xmlTwo!)
-        print(Int(parsedData["forecasts"]["forecast"][date]["day"]["tempmin"].element!.text!)!)
         weatherData()
-        
     }
     
     func resetBGColor() {
@@ -121,9 +135,9 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
     
     func weatherData() {
         
-        if let weatherPlaceDefault = UserDefaults.standard.integer(forKey: "defaultPlace") as? Int {
-            weatherPlace = weatherPlaceDefault
-        }
+//        if let weatherPlaceDefault = UserDefaults.standard.integer(forKey: "defaultPlace") as? Int {
+//            weatherPlace = weatherPlaceDefault
+//        }
         
         let parsedData =  SWXMLHash.parse(self.xmlTwo!)
         guard abs(weather.tempMinDay) < 51 && abs(weather.tempMaxDay) < 51 && abs(weather.tempMinNight) < 51 && abs(weather.tempMaxNight) < 51 else {return}
@@ -131,7 +145,6 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         weather.tempMinDay = Int(parsedData["forecasts"]["forecast"][date]["day"]["tempmin"].element!.text!)!
         weather.tempMaxDay = Int(parsedData["forecasts"]["forecast"][date]["day"]["tempmax"].element!.text!)!
         weather.weatherTextDay = parsedData["forecasts"]["forecast"][date]["day"]["text"].element!.text!
-        
         weather.tempMinNight = Int(parsedData["forecasts"]["forecast"][date]["night"]["tempmin"].element!.text!)!
         weather.tempMaxNight = Int(parsedData["forecasts"]["forecast"][date]["night"]["tempmax"].element!.text!)!
         weather.weatherTextNight = parsedData["forecasts"]["forecast"][date]["night"]["text"].element!.text!
@@ -143,20 +156,16 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         weather.weatherPlaceTemperatureNight = Int(parsedData["forecasts"]["forecast"][0]["night"]["place"][weatherPlace]["tempmin"].element!.text!)!
         weather.weatherPlaceTemperatureDay = Int(parsedData["forecasts"]["forecast"][0]["day"]["place"][weatherPlace]["tempmax"].element!.text!)!
         
-        
-        
         self.temperature.text = "\(weather.weatherPlaceTemperatureNight) kuni \(weather.weatherPlaceTemperatureDay) "
-        self.phenomenon.text = "Päeval on \(weather.weatherDictionary[weather.weatherPlacePhenomenonDay]!) \n Öösel on \(weather.weatherDictionary[weather.weatherPlacePhenomenonNight]!)"
+        self.phenomenon.text = "Päeval on \(weather.weatherDictionary[weather.weatherPlacePhenomenonDay]!.lowercased()) \n Öösel on \(weather.weatherDictionary[weather.weatherPlacePhenomenonNight]!.lowercased())"
         weatherImage.image = UIImage(named: weather.weatherPlacePhenomenonDay)
         
         for button in [date1Button, date2Button, date3Button, date4Button] {
             button?.layer.borderWidth = 1
             button?.layer.borderColor = UIColor.lightGray.cgColor
         }
-        
         for layer in [dayTemp, nightTemp, dayText, nightText, descriptionDay, descriptionNight, windRange] {
             layer?.layer.borderWidth = 1
-            
             
             for i in 0...3 {
                 weather.chosenDate.append(parsedData["forecasts"]["forecast"][i].element!.attribute(by: "date")!.text)
@@ -231,12 +240,5 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
             self.descriptionDay.text = "Päev. \(weather.weatherTextDay)"
             self.descriptionNight.text = "Öö. \(weather.weatherTextNight)"
         }
-        
-        
-        
-        
     }
-    
-    
 }
-
