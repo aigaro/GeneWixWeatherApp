@@ -43,9 +43,12 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         placePicker.delegate = self
         placePicker.dataSource = self
         placePicker.isHidden = false
-        phenomenon.isHidden = false
-        temperature.isHidden = false
-        weatherImage.isHidden = false
+        if weatherPlace > 5 {
+            phenomenon.isHidden = true
+            temperature.isHidden = true
+            weatherImage.isHidden = true
+            weatherPlace = 5
+        }
 
     }
     
@@ -164,12 +167,6 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
             weatherImage.isHidden = true
             weatherPlace = 5
         }
-        
-//        guard weatherPlace < 6 else {
-//            phenomenon.isHidden = true
-//            temperature.isHidden = true
-//            weatherImage.isHidden = true
-//            return} // last three don't have temp and phenomenon, app crashes
         
         weather.weatherPlacePhenomenonDay = parsedData["forecasts"]["forecast"][0]["day"]["place"][weatherPlace]["phenomenon"].element!.text!
         weather.weatherPlacePhenomenonNight = parsedData["forecasts"]["forecast"][0]["night"]["place"][weatherPlace]["phenomenon"].element!.text!
