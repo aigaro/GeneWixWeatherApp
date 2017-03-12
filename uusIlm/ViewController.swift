@@ -14,7 +14,7 @@ var weather = WeatherData()
 var date = 0
 var weatherPlace = 0
 var weatherPlaceDefault = Int()
-//var weatherInt = 0
+
 
 class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     
@@ -34,7 +34,7 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         }
     }
     
-
+    
     //pickerView
     
     
@@ -51,7 +51,7 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         
     }
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-
+        
         weatherPlace = row
         weatherPlaceDefault = row
         UserDefaults.standard.set(row, forKey: "defaultPlace")
@@ -59,8 +59,10 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
     }
     
     
-    //Add guard statement. func() needed? What type of variable is XMLIndexer?
-//    guard if let Alamofire.request("https://www.ilmateenistus.ee/ilma_andmed/xml/forecast.php").responseString().data else {return}
+    //Add guard statement. Why does it not work?
+    //    guard let xmlTwo = Alamofire.request("https://www.ilmateenistus.ee/ilma_andmed/xml/forecast.php").responseString().data else {
+    //    return
+    //    }
     let xmlTwo = Alamofire.request("https://www.ilmateenistus.ee/ilma_andmed/xml/forecast.php").responseString().data
     
     @IBOutlet weak var dayTemp: UILabel!
@@ -140,7 +142,7 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         weather.weatherPlacePhenomenonNight = parsedData["forecasts"]["forecast"][0]["night"]["place"][weatherPlace]["phenomenon"].element!.text!
         weather.weatherPlaceTemperatureNight = Int(parsedData["forecasts"]["forecast"][0]["night"]["place"][weatherPlace]["tempmin"].element!.text!)!
         weather.weatherPlaceTemperatureDay = Int(parsedData["forecasts"]["forecast"][0]["day"]["place"][weatherPlace]["tempmax"].element!.text!)!
-            
+        
         
         
         self.temperature.text = "\(weather.weatherPlaceTemperatureNight) kuni \(weather.weatherPlaceTemperatureDay) "
