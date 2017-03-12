@@ -13,7 +13,7 @@ import SWXMLHash
 var weather = WeatherData()
 var date = 0
 var weatherPlace = 0
-var weatherPlaceDefault = Int()
+var weatherPlaceDefault = 0
 
 class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     
@@ -46,13 +46,15 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         phenomenon.isHidden = false
         temperature.isHidden = false
         weatherImage.isHidden = false
+
     }
     
-    //    override func viewDidAppear(_ animated: Bool) {
-    //        if let defaultPlace = UserDefaults.standard.integer(forKey: "defaultPlace") as? Int {
-    //            self.placePicker.selectRow(defaultPlace, inComponent: 0, animated: true)
-    //        }
-    //    }
+        override func viewDidAppear(_ animated: Bool) {
+            if let defaultPlace = UserDefaults.standard.integer(forKey: "defaultPlace") as? Int {
+                self.placePicker.selectRow(defaultPlace, inComponent: 0, animated: true)
+            }
+
+        }
     
     
     //pickerView
@@ -71,6 +73,7 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         weatherPlace = row
         weatherPlaceDefault = row
         UserDefaults.standard.set(row, forKey: "defaultPlace")
+
         weatherData()
     }
     
@@ -135,9 +138,9 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
     
     func weatherData() {
         
-//        if let weatherPlaceDefault = UserDefaults.standard.integer(forKey: "defaultPlace") as? Int {
-//            weatherPlace = weatherPlaceDefault
-//        }
+        if let weatherPlaceDefault = UserDefaults.standard.integer(forKey: "defaultPlace") as? Int {
+            weatherPlace = weatherPlaceDefault
+        }
         
         let parsedData =  SWXMLHash.parse(self.xmlTwo!)
         guard abs(weather.tempMinDay) < 51 && abs(weather.tempMaxDay) < 51 && abs(weather.tempMinNight) < 51 && abs(weather.tempMaxNight) < 51 else {return}
@@ -149,7 +152,24 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         weather.tempMaxNight = Int(parsedData["forecasts"]["forecast"][date]["night"]["tempmax"].element!.text!)!
         weather.weatherTextNight = parsedData["forecasts"]["forecast"][date]["night"]["text"].element!.text!
         
-        guard weatherPlace < 6 else {return} // last three don't have temp, app crashes
+        if date == 0 {
+        phenomenon.isHidden = false
+        temperature.isHidden = false
+        weatherImage.isHidden = false
+        }
+        
+        if weatherPlace > 5 {
+            phenomenon.isHidden = true
+            temperature.isHidden = true
+            weatherImage.isHidden = true
+            weatherPlace = 5
+        }
+        
+//        guard weatherPlace < 6 else {
+//            phenomenon.isHidden = true
+//            temperature.isHidden = true
+//            weatherImage.isHidden = true
+//            return} // last three don't have temp and phenomenon, app crashes
         
         weather.weatherPlacePhenomenonDay = parsedData["forecasts"]["forecast"][0]["day"]["place"][weatherPlace]["phenomenon"].element!.text!
         weather.weatherPlacePhenomenonNight = parsedData["forecasts"]["forecast"][0]["night"]["place"][weatherPlace]["phenomenon"].element!.text!
