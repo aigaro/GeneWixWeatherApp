@@ -13,6 +13,7 @@ import SWXMLHash
 var weather = WeatherData()
 var date = 0
 var weatherPlace = 0
+var weatherPlaceDefault = 3
 var weatherInt = 0
 
 class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
@@ -24,8 +25,26 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         windRange.isHidden = false
         placePicker.delegate = self
         placePicker.dataSource = self
+        
+        let defaults = UserDefaults.standard
+        
+        
+        
+        
+        
+        
+        if defaults.bool(forKey: "hasLaunched") {
+            //has launched
+            weatherPlace = weatherPlaceDefault
+        } else {
+            defaults.set(true, forKey: "hasLaunced")
+            defaults.synchronize()
+            weatherPlace = 0
+
+        }
     }
     
+
     //pickerView
     
     
